@@ -466,6 +466,150 @@
         min-width: 84px;
       }
 
+      .bottom-menu {
+        position: absolute;
+        left: 50%;
+        bottom: 118px;
+        z-index: 2;
+        width: 1080px;
+        height: 110px;
+        transform: translateX(-50%);
+      }
+
+      .bottom-menu-header {
+        display: flex;
+        width: 1080px;
+        height: 28px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding-left: 4px;
+        border-radius: 20px;
+      }
+
+      .bottom-menu-title {
+        margin: 0;
+        color: #292524;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 150%;
+        letter-spacing: 0.02em;
+      }
+
+      .main-menu-button {
+        display: inline-flex;
+        width: 85px;
+        height: 28px;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 4px 6px 4px 16px;
+        border: 1px solid #e7e5e4;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.38);
+        color: #292524;
+        font-family: "Noto Sans", Inter, sans-serif;
+        font-size: 12px;
+        line-height: 150%;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+      }
+
+      .main-menu-button svg {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.18s ease;
+      }
+
+      .bottom-menu.is-collapsed .main-menu-button svg {
+        transform: rotate(180deg);
+      }
+
+      .recommendation-row {
+        display: flex;
+        width: 1080px;
+        height: 74px;
+        align-items: flex-start;
+        gap: 12px;
+        margin-top: 8px;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .bottom-menu.is-collapsed .recommendation-row {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(10px);
+      }
+
+      .recommend-card {
+        display: flex;
+        width: 261px;
+        height: 74px;
+        flex: 1;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border: 0;
+        border-radius: 12px;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.02)), #f4f3f1;
+        box-shadow: 0 5px 30px rgba(255, 255, 255, 0.1);
+        color: #292524;
+        cursor: pointer;
+        text-align: left;
+        transition:
+          background 0.18s ease,
+          box-shadow 0.18s ease,
+          transform 0.18s ease;
+      }
+
+      .recommend-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .recommend-card.is-active {
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.02)), rgba(255, 255, 255, 0.82);
+        box-shadow: 0 0 31.3px rgba(214, 187, 39, 0.48);
+      }
+
+      .recommend-card-title {
+        width: 100%;
+        overflow: hidden;
+        padding: 0 4px;
+        color: #292524;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 150%;
+        letter-spacing: 0.02em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .recommend-card-meta {
+        display: flex;
+        align-items: center;
+        gap: 7.69px;
+        padding: 0 4px;
+        color: #79716b;
+        font-family: "Noto Sans", Inter, sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 150%;
+        letter-spacing: 0.02em;
+      }
+
+      .recommend-card-meta svg {
+        width: 20px;
+        height: 20px;
+        color: #79716b;
+        opacity: 0.72;
+      }
+
       @keyframes mascotFloat {
         0%,
         100% {
@@ -606,6 +750,30 @@
           width: 100%;
           flex-wrap: wrap;
         }
+
+        .bottom-menu {
+          position: absolute;
+          top: 590px;
+          bottom: auto;
+          width: calc(100vw - 36px);
+          height: 150px;
+        }
+
+        .bottom-menu-header {
+          width: 100%;
+        }
+
+        .recommendation-row {
+          width: 100%;
+          height: 86px;
+          overflow-x: auto;
+          padding-bottom: 8px;
+        }
+
+        .recommend-card {
+          min-width: 230px;
+          flex: 0 0 230px;
+        }
       }
     </style>
   </head>
@@ -711,6 +879,55 @@
           </div>
         </form>
       </section>
+      <section class="bottom-menu" id="bottomMenu" aria-label="推荐菜单">
+        <div class="bottom-menu-header">
+          <h2 class="bottom-menu-title">路线推荐</h2>
+          <button class="main-menu-button" id="menuToggle" type="button" aria-expanded="true">
+            <span>Main</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 17 17 7M10 7h7v7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+            </svg>
+          </button>
+        </div>
+        <div class="recommendation-row" aria-label="推荐卡片列表">
+          <button class="recommend-card is-active" type="button">
+            <span class="recommend-card-title">上海虹桥周边美食快线</span>
+            <span class="recommend-card-meta">
+              <span>25 mins</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M10 7h7v7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+              </svg>
+            </span>
+          </button>
+          <button class="recommend-card" type="button">
+            <span class="recommend-card-title">商务同行高效路线</span>
+            <span class="recommend-card-meta">
+              <span>40 mins</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M10 7h7v7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+              </svg>
+            </span>
+          </button>
+          <button class="recommend-card" type="button">
+            <span class="recommend-card-title">亲友轻松下午茶计划</span>
+            <span class="recommend-card-meta">
+              <span>55 mins</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M10 7h7v7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+              </svg>
+            </span>
+          </button>
+          <button class="recommend-card" type="button">
+            <span class="recommend-card-title">短途景点购物组合</span>
+            <span class="recommend-card-meta">
+              <span>70 mins</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M10 7h7v7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </section>
     </main>
     <script>
       const lines = [
@@ -726,6 +943,8 @@
       const cursorBall = document.querySelector(".cursor-ball");
       const speechBubble = document.querySelector(".speech-bubble");
       const plannerForm = document.querySelector("#plannerForm");
+      const bottomMenu = document.querySelector("#bottomMenu");
+      const menuToggle = document.querySelector("#menuToggle");
       let lineIndex = 0;
       let charIndex = 0;
 
@@ -807,6 +1026,15 @@
           const activeInterests = plannerForm.querySelectorAll('[data-group="interest"].is-active');
           if (activeInterests.length === 0) button.classList.add("is-active");
         }
+      });
+      menuToggle.addEventListener("click", () => {
+        const collapsed = bottomMenu.classList.toggle("is-collapsed");
+        menuToggle.setAttribute("aria-expanded", String(!collapsed));
+      });
+      bottomMenu.addEventListener("click", (event) => {
+        const card = event.target.closest(".recommend-card");
+        if (!card) return;
+        bottomMenu.querySelectorAll(".recommend-card").forEach((item) => item.classList.toggle("is-active", item === card));
       });
       typeLine();
     </script>
