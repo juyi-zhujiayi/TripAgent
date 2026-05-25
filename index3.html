@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soft Yellow Dotted Background</title>
+    <style>
+      :root {
+        --paper: #f7f6ee;
+        --paper-warm: #f2f1e9;
+        --yellow: #fff335;
+        --ink: #1d1d1b;
+        --muted: #5f5e5c;
+        --dot: rgba(215, 194, 66, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100%;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        background:
+          radial-gradient(ellipse 58% 26% at 50% -2%, rgba(255, 243, 53, 0.86), rgba(255, 243, 53, 0.42) 44%, rgba(255, 243, 53, 0.12) 76%, transparent 100%),
+          radial-gradient(ellipse 66% 34% at 50% 9%, rgba(255, 255, 128, 0.28), rgba(255, 255, 128, 0.1) 52%, transparent 78%),
+          radial-gradient(circle at 8% 32%, rgba(255, 255, 255, 0.82), transparent 27%),
+          radial-gradient(circle at 94% 35%, rgba(255, 255, 255, 0.78), transparent 29%),
+          radial-gradient(ellipse 72% 34% at 50% 61%, rgba(255, 255, 255, 0.62), transparent 70%),
+          linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 48%, #efeee7 100%);
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      body::before {
+        opacity: 0.34;
+        background-image:
+          radial-gradient(circle, var(--dot) 1.2px, transparent 1.55px),
+          radial-gradient(circle, rgba(255, 255, 255, 0.5) 1px, transparent 1.45px);
+        background-position:
+          0 0,
+          11px 11px;
+        background-size: 28px 28px;
+      }
+
+      body::after {
+        background:
+          radial-gradient(ellipse 54% 26% at 50% 0%, rgba(255, 244, 0, 0.24), rgba(255, 244, 0, 0.08) 62%, transparent 82%),
+          radial-gradient(circle at -3% 42%, rgba(255, 255, 255, 0.58), transparent 28%),
+          radial-gradient(circle at 103% 39%, rgba(255, 255, 255, 0.58), transparent 29%),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.26), transparent 12%, transparent 88%, rgba(255, 255, 255, 0.26));
+        filter: blur(4px);
+      }
+
+      .background {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        min-height: 100vh;
+      }
+
+      .hero-group {
+        position: absolute;
+        top: 88px;
+        left: 50%;
+        z-index: 1;
+        width: 761px;
+        height: 230px;
+        transform: translateX(-50%);
+      }
+
+      .mascot-wrap {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 270px;
+        height: 158px;
+        transform: translateX(-50%);
+        animation: mascotFloat 4.8s ease-in-out infinite;
+      }
+
+      .mascot {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        filter: drop-shadow(0 20px 30px rgba(29, 29, 27, 0.08));
+      }
+
+      .mascot .hair {
+        transform-origin: 50% 50%;
+        animation: softPulse 3.4s ease-in-out infinite;
+      }
+
+      .mascot .line {
+        fill: none;
+        stroke: var(--ink);
+        stroke-width: 18;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .speech-bubble {
+        position: absolute;
+        top: 20px;
+        right: -4px;
+        display: grid;
+        min-width: 66px;
+        height: 49px;
+        place-items: center;
+        padding: 10px 16px 12px;
+        border-radius: 58% 48% 55% 45% / 56% 55% 46% 45%;
+        background: #211706;
+        color: #fff3aa;
+        font-size: 20px;
+        line-height: 1;
+        opacity: 0;
+        transform: translate(0, 18px) scale(0.72) rotate(-8deg);
+        transform-origin: 8% 88%;
+        transition:
+          opacity 0.22s ease,
+          transform 0.4s cubic-bezier(0.18, 0.9, 0.2, 1.3);
+      }
+
+      .speech-bubble::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 15px;
+        width: 20px;
+        height: 18px;
+        border-radius: 2px 2px 2px 18px;
+        background: #211706;
+        transform: rotate(-34deg) skewX(-10deg);
+      }
+
+      .speech-bubble.is-visible {
+        opacity: 1;
+        transform: translate(0, 0) scale(1) rotate(-8deg);
+        animation: bubbleNudge 0.62s ease both;
+      }
+
+      .speech-bubble.is-hi {
+        font-family: "Comic Sans MS", "Marker Felt", "Arial Rounded MT Bold", cursive;
+        font-style: italic;
+      }
+
+      .headline {
+        position: absolute;
+        top: 194px;
+        left: 50%;
+        display: flex;
+        width: 761px;
+        height: 32px;
+        align-items: center;
+        justify-content: center;
+        transform: translateX(-50%);
+      }
+
+      .headline-text {
+        display: inline-block;
+        min-height: 32px;
+        color: #000;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 32px;
+        white-space: nowrap;
+      }
+
+      .cursor-ball {
+        --x: 0px;
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: var(--ink);
+        transform: translateX(calc(-50% + var(--x))) rotate(var(--roll, 0deg));
+        transition: transform 0.12s linear;
+      }
+
+      .cursor-ball::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .headline.is-complete .cursor-ball {
+        animation: ballFade 0.38s ease forwards;
+      }
+
+      .subtitle {
+        position: absolute;
+        top: 226px;
+        left: 50%;
+        width: 761px;
+        height: 28px;
+        margin: 0;
+        color: var(--muted);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 28px;
+        text-align: center;
+        transform: translateX(-50%);
+      }
+
+      .planner-panel {
+        position: absolute;
+        top: 282px;
+        left: 50%;
+        width: 764px;
+        height: 207px;
+        transform: translateX(-50%);
+      }
+
+      .search-box {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        display: flex;
+        width: 761px;
+        height: 64px;
+        align-items: center;
+        gap: 16px;
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        background: #fffefb;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        transform: translateX(-50%);
+      }
+
+      .search-field {
+        display: flex;
+        min-width: 0;
+        flex: 1;
+        align-items: center;
+        gap: 20px;
+        height: 46px;
+        padding: 0 16px;
+      }
+
+      .pin-icon {
+        width: 16px;
+        height: 20px;
+        flex: 0 0 auto;
+      }
+
+      .search-input {
+        width: 100%;
+        min-width: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: #424656;
+        font-size: 16px;
+        line-height: 19px;
+      }
+
+      .search-input::placeholder {
+        color: #6b7280;
+      }
+
+      .generate-button {
+        display: flex;
+        width: 150px;
+        height: 46px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 0;
+        border-radius: 12px;
+        background: #151515;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        letter-spacing: 0.28px;
+        transition:
+          box-shadow 0.18s ease,
+          transform 0.18s ease;
+      }
+
+      .generate-button:hover {
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
+        transform: translateY(-1px);
+      }
+
+      .sparkle-icon {
+        width: 22px;
+        height: 22px;
+      }
+
+      .traveler-row {
+        position: absolute;
+        top: 92px;
+        left: 50%;
+        display: flex;
+        width: 763px;
+        gap: 19px;
+        transform: translateX(-50%);
+      }
+
+      .pill,
+      .chip,
+      .segment-button {
+        border: 0;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        cursor: pointer;
+      }
+
+      .pill {
+        display: inline-flex;
+        width: 79px;
+        height: 32px;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 12px;
+        border: 1px solid #c2c6d8;
+        border-radius: 9999px;
+        background: transparent;
+        color: #424656;
+        font-size: 12px;
+        line-height: 18px;
+        white-space: nowrap;
+      }
+
+      .pill.is-active {
+        border-color: #d6bb27;
+        background: #d6bb27;
+        color: #fff;
+        font-weight: 600;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .pill.is-custom,
+      .chip.is-custom {
+        border-color: #e5e7eb;
+        border-style: dashed;
+        color: #5f5e5c;
+      }
+
+      .pill.is-custom {
+        width: 84px;
+      }
+
+      .lower-controls {
+        position: absolute;
+        top: 146px;
+        left: 0;
+        display: grid;
+        width: 764px;
+        grid-template-columns: 375px 351px;
+        gap: 38px;
+      }
+
+      .control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .control-group.preferences {
+        width: 351px;
+        gap: 20px;
+      }
+
+      .control-label {
+        display: flex;
+        height: 20px;
+        align-items: center;
+        gap: 8px;
+        color: #070707;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 0.28px;
+      }
+
+      .control-label svg {
+        width: 20px;
+        height: 20px;
+        color: #d6bb27;
+      }
+
+      .segmented {
+        display: grid;
+        width: 375px;
+        height: 46px;
+        grid-template-columns: repeat(3, 1fr);
+        padding: 4px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: rgba(243, 243, 243, 0.5);
+      }
+
+      .segment-button {
+        height: 36px;
+        border-radius: 8px;
+        background: transparent;
+        color: #5f5e5c;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 0.28px;
+      }
+
+      .segment-button.is-active {
+        background: #fff;
+        color: #d6bb27;
+        font-weight: 600;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .interest-row {
+        display: flex;
+        width: 352px;
+        gap: 8px;
+      }
+
+      .chip {
+        display: inline-flex;
+        height: 34px;
+        min-width: 59px;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.4);
+        color: #424656;
+        font-size: 12px;
+        line-height: 16px;
+        letter-spacing: 0.48px;
+        white-space: nowrap;
+      }
+
+      .chip.is-active {
+        border-color: #d6bb27;
+        background: #d6bb27;
+        color: #fff;
+        font-weight: 600;
+      }
+
+      .chip.is-custom {
+        min-width: 84px;
+      }
+
+      @keyframes mascotFloat {
+        0%,
+        100% {
+          transform: translateX(-50%) translateY(0) rotate(-1deg);
+        }
+
+        50% {
+          transform: translateX(-50%) translateY(-10px) rotate(1.5deg);
+        }
+      }
+
+      @keyframes softPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          filter: saturate(1);
+        }
+
+        50% {
+          transform: scale(1.018);
+          filter: saturate(1.08);
+        }
+      }
+
+      @keyframes bubbleNudge {
+        0% {
+          transform: translate(-10px, 20px) scale(0.72) rotate(-8deg);
+        }
+
+        64% {
+          transform: translate(3px, -4px) scale(1.06) rotate(-7deg);
+        }
+
+        100% {
+          transform: translate(0, 0) scale(1) rotate(-8deg);
+        }
+      }
+
+      @keyframes ballFade {
+        to {
+          opacity: 0;
+          transform: translateX(calc(-50% + var(--x))) scale(0.82);
+        }
+      }
+
+      @media (max-width: 900px) {
+        body {
+          overflow: auto;
+        }
+
+        .background {
+          min-height: 760px;
+        }
+
+        .hero-group {
+          top: 82px;
+          width: calc(100vw - 36px);
+        }
+
+        .mascot-wrap {
+          width: 150px;
+          height: 87px;
+        }
+
+        .speech-bubble {
+          top: 7px;
+          right: -30px;
+          min-width: 56px;
+          height: 40px;
+          font-size: 16px;
+        }
+
+        .headline {
+          top: 154px;
+          width: calc(100vw - 36px);
+        }
+
+        .headline-text {
+          font-size: 22px;
+          line-height: 32px;
+          transform: scale(var(--text-scale, 1));
+          transform-origin: center;
+        }
+
+        .subtitle {
+          top: 188px;
+          width: calc(100vw - 36px);
+        }
+
+        .planner-panel {
+          top: 235px;
+          width: calc(100vw - 36px);
+          height: 340px;
+        }
+
+        .search-box {
+          left: 0;
+          width: 100%;
+          height: auto;
+          align-items: stretch;
+          flex-direction: column;
+          transform: none;
+        }
+
+        .search-field {
+          height: 46px;
+        }
+
+        .generate-button {
+          width: 100%;
+        }
+
+        .traveler-row {
+          top: 120px;
+          left: 0;
+          width: 100%;
+          flex-wrap: wrap;
+          gap: 10px;
+          transform: none;
+        }
+
+        .lower-controls {
+          top: 247px;
+          width: 100%;
+          grid-template-columns: 1fr;
+          gap: 22px;
+        }
+
+        .control-group.preferences {
+          width: 100%;
+        }
+
+        .segmented {
+          width: 100%;
+        }
+
+        .interest-row {
+          width: 100%;
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="background" aria-label="图片背景">
+      <section class="hero-group" aria-label="小美旅行搭档">
+        <div class="mascot-wrap" aria-label="小美卡通人物">
+          <svg class="mascot" viewBox="0 0 420 300" role="img" aria-label="小美">
+            <defs>
+              <linearGradient id="hairGradient" x1="72" x2="356" y1="30" y2="278" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#fff24a" />
+                <stop offset="0.42" stop-color="#ffd21a" />
+                <stop offset="1" stop-color="#ffec37" />
+              </linearGradient>
+              <linearGradient id="neckGlow" x1="178" x2="252" y1="190" y2="252" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#d8fff2" stop-opacity="0.9" />
+                <stop offset="1" stop-color="#bff6de" stop-opacity="0" />
+              </linearGradient>
+              <filter id="soften">
+                <feGaussianBlur stdDeviation="1.4" />
+              </filter>
+            </defs>
+            <path
+              class="hair"
+              fill="url(#hairGradient)"
+              d="M209 28c72 0 132 40 154 99 20 56 8 112-25 154-9 12-4 26 10 33 10 5 10 17 0 22-20 9-56 7-81-6-20-10-27-27-22-49 7-33 4-62-11-81-19-25-55-34-87-23-34 12-61 37-74 67-11 23-8 45 9 59 13 12 9 34-11 38-31 5-65-22-68-59-2-24 10-43 31-53 20-9 32-29 29-52-2-19-13-34-29-44-22-14-28-39-15-64C50 57 122 28 209 28Z"
+            />
+            <path fill="#fffef8" d="M76 136c0-68 53-120 127-120 79 0 135 54 135 126 0 60-37 107-94 124v43h-48v-31c-52-5-95-33-114-74-8-18-11-45-6-68Z" />
+            <path class="hair" fill="url(#hairGradient)" filter="url(#soften)" opacity="0.98" d="M46 102C78 34 145 12 229 18c50 4 91 21 117 50-17 56-67 94-142 114-64 17-117-5-158-80Z" />
+            <path fill="url(#neckGlow)" d="M160 200c28 12 62 12 93-1-14 22-34 38-58 43-16-10-27-24-35-42Z" />
+            <path class="line" d="M107 119c-34-2-56 22-54 56 2 31 22 55 52 65" />
+            <path class="line" d="M286 101v42" />
+            <path class="line" d="M190 141c4-28 16-42 31-42s27 15 31 42" />
+            <path class="line" d="M191 193c23 22 54 29 85 18" />
+            <path class="line" d="M344 142c3 60-26 108-83 128v51" />
+          </svg>
+          <div class="speech-bubble" aria-live="polite">Hi～</div>
+        </div>
+
+        <div class="headline" aria-live="polite">
+          <span class="headline-text"></span>
+          <span class="cursor-ball" aria-hidden="true"></span>
+        </div>
+        <p class="subtitle">Quickly help you decide on a short-distance route. Tell us where you want to go.</p>
+        <form class="planner-panel" id="plannerForm" aria-label="旅行生成器">
+          <div class="search-box">
+            <label class="search-field" for="destinationInput">
+              <svg class="pin-icon" viewBox="0 0 18 22" aria-hidden="true">
+                <path d="M9 21s8-7.03 8-13A8 8 0 1 0 1 8c0 5.97 8 13 8 13Z" fill="none" stroke="#D6BB27" stroke-width="3" />
+                <circle cx="9" cy="8" r="2.5" fill="#D6BB27" />
+              </svg>
+              <input class="search-input" id="destinationInput" type="text" placeholder="E.g. '上海虹桥机场附近美食'" autocomplete="off" />
+            </label>
+            <button class="generate-button" type="submit">
+              Generate
+              <svg class="sparkle-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#fff" d="m13.5 2 1.9 5.3 5.1 1.9-5.1 1.9-1.9 5.3-1.9-5.3-5.1-1.9 5.1-1.9L13.5 2Zm5.2 12.4.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9.9-2.4ZM5.1 13.2l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7.7-1.9Z" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="traveler-row" aria-label="出行类型">
+            <button class="pill is-active" type="button" data-group="traveler">独立自行</button>
+            <button class="pill" type="button" data-group="traveler">商务同行</button>
+            <button class="pill" type="button" data-group="traveler">家庭出行</button>
+            <button class="pill" type="button" data-group="traveler">情侣出行</button>
+            <button class="pill" type="button" data-group="traveler">朋友出行</button>
+            <button class="pill" type="button" data-group="traveler">亲子同行</button>
+            <button class="pill" type="button" data-group="traveler">老人同行</button>
+            <button class="pill is-custom" type="button" data-custom="traveler">＋ 自定义</button>
+          </div>
+
+          <div class="lower-controls">
+            <section class="control-group" aria-label="行程节奏">
+              <div class="control-label">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 14a8 8 0 1 0 16 0H4Zm0 0V9m16 5V9M9 14l6-6" />
+                </svg>
+                行程节奏
+              </div>
+              <div class="segmented">
+                <button class="segment-button" type="button" data-group="pace">紧凑</button>
+                <button class="segment-button is-active" type="button" data-group="pace">适中</button>
+                <button class="segment-button" type="button" data-group="pace">宽松</button>
+              </div>
+            </section>
+
+            <section class="control-group preferences" aria-label="兴趣偏好">
+              <div class="control-label">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M20.8 5.6a5.5 5.5 0 0 0-7.8 0L12 6.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 22l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" />
+                </svg>
+                兴趣偏好
+              </div>
+              <div class="interest-row">
+                <button class="chip is-active" type="button" data-group="interest">美食</button>
+                <button class="chip" type="button" data-group="interest">娱乐</button>
+                <button class="chip" type="button" data-group="interest">景点</button>
+                <button class="chip" type="button" data-group="interest">购物</button>
+                <button class="chip is-custom" type="button" data-custom="interest">＋ 自定义</button>
+              </div>
+            </section>
+          </div>
+        </form>
+      </section>
+    </main>
+    <script>
+      const lines = [
+        { text: "我是小美，你的旅行搭档！", bubble: "Hi～", hi: true },
+        { text: "周末纠结去哪玩？我来帮你安排！", bubble: "📅" },
+        { text: "行程安排突然变化？我来帮你速查！", bubble: "🔍" },
+        { text: "中午朋友约饭？我来帮你搞定！", bubble: "☕️" },
+        { text: "商务安排路线？我来帮你筹划！", bubble: "🤵" },
+      ];
+
+      const headline = document.querySelector(".headline");
+      const headlineText = document.querySelector(".headline-text");
+      const cursorBall = document.querySelector(".cursor-ball");
+      const speechBubble = document.querySelector(".speech-bubble");
+      const plannerForm = document.querySelector("#plannerForm");
+      let lineIndex = 0;
+      let charIndex = 0;
+
+      function fitHeadline() {
+        headlineText.style.setProperty("--text-scale", "1");
+        const maxWidth = headline.clientWidth - 34;
+        const textWidth = headlineText.scrollWidth;
+        const scale = Math.min(1, maxWidth / Math.max(textWidth, 1));
+        headlineText.style.setProperty("--text-scale", String(scale));
+      }
+
+      function updateBall() {
+        fitHeadline();
+        const headlineRect = headline.getBoundingClientRect();
+        const textRect = headlineText.getBoundingClientRect();
+        const headlineCenter = headlineRect.left + headlineRect.width / 2;
+        const nextX = textRect.right + 18 - headlineCenter;
+        cursorBall.style.setProperty("--x", `${nextX}px`);
+        cursorBall.style.setProperty("--roll", `${nextX * 1.65}deg`);
+      }
+
+      function showBubble(current) {
+        speechBubble.textContent = current.bubble;
+        speechBubble.classList.toggle("is-hi", Boolean(current.hi));
+        speechBubble.classList.add("is-visible");
+      }
+
+      function typeLine() {
+        const current = lines[lineIndex];
+        charIndex = 0;
+        headlineText.textContent = "";
+        headline.classList.remove("is-complete");
+        cursorBall.style.opacity = "1";
+        showBubble(current);
+        updateBall();
+
+        window.setTimeout(function tick() {
+          if (charIndex < current.text.length) {
+            headlineText.textContent += current.text[charIndex];
+            charIndex += 1;
+            updateBall();
+            window.setTimeout(tick, 86);
+            return;
+          }
+
+          speechBubble.classList.remove("is-visible");
+          headline.classList.add("is-complete");
+          window.setTimeout(() => {
+            lineIndex = (lineIndex + 1) % lines.length;
+            typeLine();
+          }, 1250);
+        }, 240);
+      }
+
+      window.addEventListener("resize", updateBall);
+      plannerForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+      });
+      plannerForm.addEventListener("click", (event) => {
+        const button = event.target.closest("button");
+        if (!button || !plannerForm.contains(button)) return;
+
+        if (button.dataset.custom) {
+          const value = window.prompt(button.dataset.custom === "traveler" ? "请输入自定义出行类型" : "请输入自定义兴趣偏好");
+          if (!value || !value.trim()) return;
+          button.textContent = value.trim();
+          button.classList.remove("is-custom");
+          button.dataset.group = button.dataset.custom === "traveler" ? "traveler" : "interest";
+          delete button.dataset.custom;
+        }
+
+        if (button.dataset.group === "traveler" || button.dataset.group === "pace") {
+          plannerForm.querySelectorAll(`[data-group="${button.dataset.group}"]`).forEach((item) => item.classList.toggle("is-active", item === button));
+          return;
+        }
+
+        if (button.dataset.group === "interest") {
+          button.classList.toggle("is-active");
+          const activeInterests = plannerForm.querySelectorAll('[data-group="interest"].is-active');
+          if (activeInterests.length === 0) button.classList.add("is-active");
+        }
+      });
+      typeLine();
+    </script>
+  </body>
+</html>
